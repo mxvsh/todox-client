@@ -1,23 +1,54 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import Header from "./components/Header";
+import { FiBook, FiBriefcase, FiHome } from "react-icons/fi";
+import { Box, Flex } from "@chakra-ui/layout";
+import Sidebar from "./components/Sidebar";
+import Content from "./components/Content";
 
-function App() {
+function App({ match }) {
+  const activeList = match.params.list;
+
+  const [lists, setLists] = useState({
+    home: {
+      title: "Home",
+      icon: <FiHome />,
+      items: {},
+    },
+    work: {
+      title: "Work",
+      icon: <FiBriefcase />,
+      items: {},
+    },
+    school: {
+      title: "School Projects",
+      icon: <FiBook />,
+      items: {},
+    },
+  });
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Header />
+      <Flex p={6}>
+        <Box w="20%">
+          <Sidebar activeList={activeList} lists={lists} />
+        </Box>
+        <Box>
+          <Content
+            onItemAdd={(item) => {
+              const _list = lists[activeList];
+              _list.items[new Date()] = {
+                value: item,
+              };
+              setLists({
+                ...lists,
+                [activeList]: _list,
+              });
+            }}
+            list={lists[activeList]}
+          />
+        </Box>
+      </Flex>
     </div>
   );
 }
