@@ -1,8 +1,11 @@
 import {
   Box,
   Button,
+  Checkbox,
   Heading,
+  IconButton,
   Input,
+  Spacer,
   Stack,
   Text,
   useDisclosure,
@@ -18,8 +21,9 @@ import {
 } from "@chakra-ui/react";
 import { useRef } from "react";
 import moment from "moment";
+import { FiDelete, FiTrash } from "react-icons/fi";
 
-export default ({ list, onItemAdd }) => {
+export default ({ list, onItemAdd, onItemDelete }) => {
   const modal = useDisclosure();
   const input = useRef(null);
 
@@ -31,14 +35,21 @@ export default ({ list, onItemAdd }) => {
         {Object.keys(list.items).map((key, index) => {
           const item = list.items[key];
           return (
-            <Box d="flex">
+            <Box d="flex" borderWidth="1px" borderRadius="lg" p={4}>
               {index + 1}.
               <Box ml={2}>
                 <Text fontWeight="bold" size="sm">
                   {item.value}
                 </Text>
-                <Text>Added on {moment(key).format("LLL")}</Text>
+                <Text>added {moment(key).fromNow()}</Text>
               </Box>
+              <Spacer />
+              <IconButton
+                icon={<FiTrash />}
+                onClick={() => {
+                  onItemDelete(key);
+                }}
+              />
             </Box>
           );
         })}

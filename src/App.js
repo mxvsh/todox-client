@@ -18,7 +18,6 @@ function App({ match }) {
       items: {},
     },
   });
-  console.log("lists", lists);
 
   useEffect(() => {
     MakeGET("lists").then((response) => {
@@ -54,8 +53,20 @@ function App({ match }) {
             lists={lists}
           />
         </Box>
-        <Box>
+        <Box w="80%">
           <Content
+            onItemDelete={(date) => {
+              console.log("date", date);
+              const _list = lists[activeList];
+              delete _list.items[date];
+              MakePUT("lists/" + _list.id, {
+                items: _list.items,
+              });
+              setLists({
+                ...lists,
+                [activeList]: _list,
+              });
+            }}
             onItemAdd={(item) => {
               const _list = lists[activeList];
               _list.items[new Date()] = {
