@@ -3,13 +3,39 @@ import ReactDOM from "react-dom";
 import App from "./App";
 
 import { ChakraProvider } from "@chakra-ui/react";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  Redirect,
+} from "react-router-dom";
+import Register from "./components/Auth/Register";
+import Login from "./components/Auth/Login";
+import Cookies from "js-cookie";
 
 const RouteSytem = () => {
   return (
     <Router>
       <Switch>
-        <Route path="/:list?" exact component={(props) => <App {...props} />} />
+        <Route path="/" exact component={(props) => <Login />} />
+        <Route
+          path="/register"
+          exact
+          component={(props) => <Register {...props} />}
+        />
+        <Route
+          path="/login"
+          exact
+          component={(props) => <Login {...props} />}
+        />
+        <Route
+          path="/:list?"
+          exact
+          component={(props) =>
+            Cookies.get("jwt") ? <App {...props} /> : <Redirect to="/login" />
+          }
+        />
       </Switch>
     </Router>
   );

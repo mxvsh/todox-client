@@ -1,37 +1,58 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "./components/Header";
-import { FiBook, FiBriefcase, FiHome } from "react-icons/fi";
 import { Box, Flex } from "@chakra-ui/layout";
 import Sidebar from "./components/Sidebar";
 import Content from "./components/Content";
+import { Redirect } from "react-router-dom";
+import { MakeGET, MakePOST, MakePUT } from "./helper/Request";
+import { useUser } from "./components/Auth/useUser";
 
 function App({ match }) {
-  const activeList = match.params.list;
+  const user = useUser();
+  let activeList = match.params.list;
 
   const [lists, setLists] = useState({
-    home: {
-      title: "Home",
-      icon: <FiHome />,
-      items: {},
-    },
-    work: {
-      title: "Work",
-      icon: <FiBriefcase />,
-      items: {},
-    },
-    school: {
-      title: "School Projects",
-      icon: <FiBook />,
+    all: {
+      title: "All",
+      icon: "FiBox",
       items: {},
     },
   });
+  console.log("lists", lists);
+
+  useEffect(() => {
+    MakeGET("lists").then((response) => {
+      const final = {};
+      response.map((item) => {
+        final[item.title] = item;
+      });
+      setLists({ ...lists, ...final });
+    });
+  }, []);
+
+  if (!lists[activeList]) {
+    return <Redirect to="/all" />;
+  }
 
   return (
     <div>
       <Header />
       <Flex p={6}>
         <Box w="20%">
-          <Sidebar activeList={activeList} lists={lists} />
+          <Sidebar
+            onNewList={(list) => {
+              MakePOST("lists", {
+                ...list,
+                user: user.id,
+              }).then((response) => console.log(response));
+              setLists({
+                ...lists,
+                [list.title]: list,
+              });
+            }}
+            activeList={activeList}
+            lists={lists}
+          />
         </Box>
         <Box>
           <Content
@@ -40,6 +61,9 @@ function App({ match }) {
               _list.items[new Date()] = {
                 value: item,
               };
+              MakePUT("lists/" + _list.id, {
+                items: _list.items,
+              });
               setLists({
                 ...lists,
                 [activeList]: _list,

@@ -1,12 +1,19 @@
+import { Button } from "@chakra-ui/button";
 import { useColorModeValue } from "@chakra-ui/color-mode";
-import { Box, Heading, Text } from "@chakra-ui/layout";
+import { Box, Center, Heading } from "@chakra-ui/layout";
+import Cookies from "js-cookie";
 import { Link } from "react-router-dom";
+import { useUser } from "./Auth/useUser";
+import NewList from "./NewList";
+import * as Icons from "react-icons/fi";
 
-export default ({ activeList, lists }) => {
+export default ({ activeList, lists, onNewList }) => {
+  const user = useUser();
   return (
     <Box>
       {Object.keys(lists).map((key) => {
         const list = lists[key];
+        const Icon = Icons[list.icon];
         return (
           <Link to={key}>
             <Box
@@ -26,12 +33,36 @@ export default ({ activeList, lists }) => {
                 cursor: "pointer",
               }}
             >
-              <Box mr={2}>{list.icon}</Box>
+              <Box mr={2}>
+                <Icon />
+              </Box>
               <Heading size="md">{list.title}</Heading>
             </Box>
           </Link>
         );
       })}
+      <NewList
+        onSave={(data) => {
+          onNewList(data);
+        }}
+      />
+      {!user.loading && (
+        <Box position="fixed" bottom="10" w="20%">
+          <Center>
+            <Heading mb={2}>Hi, {user.username}</Heading>
+          </Center>
+          <Button
+            w="full"
+            onClick={() => {
+              Cookies.remove("jwt");
+              Cookies.remove("user-data");
+              window.location = "/";
+            }}
+          >
+            Logout
+          </Button>
+        </Box>
+      )}
     </Box>
   );
 };

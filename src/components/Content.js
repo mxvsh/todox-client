@@ -29,7 +29,6 @@ export default ({ list, onItemAdd }) => {
 
       <Stack mt={4} spacing={2}>
         {Object.keys(list.items).map((key, index) => {
-          console.log("key", key);
           const item = list.items[key];
           return (
             <Box d="flex">

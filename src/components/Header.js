@@ -5,6 +5,7 @@ import { FiMoon, FiSun } from "react-icons/fi";
 
 export default () => {
   const colorMode = useColorMode();
+
   return (
     <Box p={4} shadow="md" d="flex">
       <Heading>TodoX</Heading>
