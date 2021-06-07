@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Checkbox,
+  Flex,
   Heading,
   IconButton,
   Input,
@@ -21,7 +22,8 @@ import {
 } from "@chakra-ui/react";
 import { useRef } from "react";
 import moment from "moment";
-import { FiDelete, FiTrash } from "react-icons/fi";
+import { FiShare2, FiTrash } from "react-icons/fi";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 
 export default ({ list, onItemAdd, onItemDelete }) => {
   const modal = useDisclosure();
@@ -29,7 +31,13 @@ export default ({ list, onItemAdd, onItemDelete }) => {
 
   return (
     <Box ml={4}>
-      <Heading>{list.title}</Heading>
+      <Flex>
+        <Heading>{list.title}</Heading>
+        <Spacer />
+        <CopyToClipboard text={`http://localhost:3000/view/${list.id}`}>
+          <IconButton icon={<FiShare2 />} onClick={() => {}} />
+        </CopyToClipboard>
+      </Flex>
 
       <Stack mt={4} spacing={2}>
         {Object.keys(list.items).map((key, index) => {

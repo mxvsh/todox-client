@@ -13,12 +13,18 @@ import {
 import Register from "./components/Auth/Register";
 import Login from "./components/Auth/Login";
 import Cookies from "js-cookie";
+import View from "./components/View";
 
 const RouteSytem = () => {
   return (
     <Router>
       <Switch>
         <Route path="/" exact component={(props) => <Login />} />
+        <Route
+          path="/view/:id"
+          exact
+          component={(props) => <View {...props} />}
+        />
         <Route
           path="/register"
           exact
