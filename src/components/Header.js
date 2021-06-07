@@ -20,7 +20,7 @@ export default () => {
           }
         }}
       >
-        Dark Mode
+        {colorMode.colorMode == "dark" ? "Light Mode" : "Dark Mode"}
       </Button>
     </Box>
   );
